@@ -1,245 +1,187 @@
 ---
-name: tikupmedia
-description: TikupMedia proprietary SEO+GEO audit engine. Analyzes a prospect's website and produces a sales-ready HTML audit focused on revenue loss, lost keywords, and competitive analysis. Use when user types `/tikupmedia <url>` or asks for a commercial audit, prospect analysis, sales-oriented audit, or "chauffer un client".
+name: tikupmedia-audit
+description: Moteur d'audit SEO+GEO commercial propriétaire TikupMedia. Analyse le site d'un prospect et produit un audit HTML prêt à envoyer, orienté revenus perdus, mots-clés manqués et analyse concurrentielle. Utilise quand l'utilisateur tape `/tikupmedia-audit <url>` ou demande "audit commercial", "audit prospect", "audit pour vente" ou "chauffer un client".
 ---
 
-# TikupMedia Audit Engine
+# Moteur d'Audit TikupMedia
 
-## What this skill does
+## Ce que fait ce skill
 
-Generates a **complete commercial SEO+GEO audit** of a prospect's website and outputs a self-contained HTML report designed to **convert** the prospect into a client.
+Génère un **audit SEO+GEO commercial complet** du site d'un prospect et produit un fichier HTML autonome conçu pour **convertir** ce prospect en client.
 
-The audit covers :
-- Technical SEO + Core Web Vitals
-- Schema.org structured data analysis
-- AI search readiness (Google AIO, ChatGPT, Perplexity, Claude, Copilot, Apple Intelligence)
-- Content quality + E-E-A-T scoring
-- Brand authority signals
-- Keyword opportunity (15 strategic keywords with volume + position)
-- Competitor analysis (top 3 with traffic estimates)
-- **Revenue loss calculation** (industry-specific formulas)
-- ROI projection (3-month, 12-month recovery scenarios)
-- Action plan (Quick Wins / Medium Term / Strategic)
+L'audit couvre :
+- SEO technique + Core Web Vitals
+- Données structurées Schema.org
+- Visibilité IA (Google AIO, ChatGPT, Perplexity, Claude, Copilot, Apple Intelligence)
+- Qualité de contenu + score E-E-A-T
+- Signaux de brand authority
+- Opportunité mots-clés (15 keywords stratégiques avec volume + position)
+- Analyse concurrents (top 3 avec trafic estimé)
+- **Calcul du CA perdu** (formules par industrie)
+- Projection ROI (scénarios 3 mois et 12 mois)
+- Plan d'action (Quick Wins / Moyen terme / Stratégique)
 
-Output : `~/Downloads/audit-<domain>-<YYYY-MM-DD>.html` — fully self-contained, brandable, ready to send by email.
+Sortie : `~/Downloads/audit-<domaine>-<YYYY-MM-DD>.html` — autonome, brandable, prêt à envoyer par mail.
 
-## When to invoke
+## Quand l'invoquer
 
-- User typed `/tikupmedia <url>`
-- User asked for "audit commercial", "audit prospect", "audit pour vente"
-- User wants to analyze a competitor for sales outreach
-- User wants a single sales-ready deliverable for a prospect
+- L'utilisateur a tapé `/tikupmedia-audit <url>`
+- L'utilisateur a demandé "audit commercial", "audit prospect", "audit pour vente"
+- L'utilisateur veut analyser un concurrent pour de la prospection
+- L'utilisateur veut un livrable unique pour un prospect
 
-## Execution plan
+## Plan d'exécution
 
 ### Phase 0 — Setup (30s)
 
-1. Read `~/.claude/skills/tikupmedia/config.json` for branding
-2. Extract domain from input URL
-3. Create workdir : `mkdir -p /tmp/tikupmedia-<domain>`
-4. Fetch homepage via WebFetch → save to `/tmp/tikupmedia-<domain>/homepage.html`
-5. Detect business type :
-   - `local_service` : phone visible, address, Maps embed
+1. Lire `~/.claude/skills/tikupmedia-audit/config.json` pour le branding
+2. Extraire le domaine de l'URL d'entrée
+3. Créer le workdir : `mkdir -p /tmp/tikupmedia-<domaine>`
+4. Récupérer la homepage via WebFetch → sauvegarder dans `/tmp/tikupmedia-<domaine>/homepage.html`
+5. Détecter le type de business :
+   - `local_service` : téléphone visible, adresse, Maps embed
    - `saas` : Pricing/Sign up, /app, API docs
-   - `ecommerce` : products, cart, prices, Product schema
-   - `agency` : portfolio, case studies, services
-   - `restaurant` : menu, opening hours, reservation
-   - `publisher` : blog, bylines, dates
-   - `personal_brand` : individual name, portfolio, freelance signals
-   - `other` : default
+   - `ecommerce` : produits, panier, prix, Product schema
+   - `agency` : portfolio, études de cas, services
+   - `restaurant` : menu, horaires, réservation
+   - `publisher` : blog, signatures, dates
+   - `personal_brand` : nom individuel, portfolio, freelance
+   - `other` : par défaut
 
-### Phase 1 — Parallel analyses (90s)
+### Phase 1 — Analyses parallèles (90s)
 
-Launch **4 specialized agents in parallel** (one Agent call per agent, all in a SINGLE message) :
+Lancer **4 agents spécialisés en parallèle** (un appel Agent par agent, tous dans UN SEUL message) :
 
-#### Agent A — Technical audit
-- Tech stack detection (CMS, frameworks)
-- Schema.org count + types present
+#### Agent A — Audit technique
+- Détection stack (CMS, frameworks)
+- Compte Schema.org + types présents
 - Security headers (HSTS, X-Content, CSP, etc.)
-- Performance signals (page weight, image formats, lazy-loading)
+- Signaux performance (poids page, formats images, lazy-loading)
 - Mobile-friendly (viewport, responsive)
-- HTTP status, sitemap, robots.txt, llms.txt
-- Crawlability + indexability
-- AI crawlers allowed/blocked
+- Status HTTP, sitemap, robots.txt, llms.txt
+- Crawlabilité + indexabilité
+- Bots IA autorisés/bloqués
 
-#### Agent B — Keywords + competitors
-- Identify the prospect's main service/product
-- Generate 12-15 strategic keywords adapted to business type :
+#### Agent B — Mots-clés + concurrents
+- Identifier le service/produit principal du prospect
+- Générer 12-15 keywords stratégiques adaptés au type de business :
   - 1 brand keyword
-  - 4 service primary
+  - 4 services primaires
   - 4 long-tail
   - 3 commercial intent
-- Estimate volumes (Google Suggest + market knowledge)
-- Estimate current position (WebSearch for prospect's domain in top 50)
-- Identify top 3 competitors via WebSearch
-- Estimate competitor monthly traffic
-- Identify what competitors do better
+- Estimer volumes (Google Suggest + connaissance marché)
+- Estimer position actuelle (WebSearch pour le domaine du prospect en top 50)
+- Identifier top 3 concurrents via WebSearch
+- Estimer trafic mensuel concurrents
+- Identifier ce que les concurrents font mieux
 
-#### Agent C — Content & E-E-A-T
-- About page presence + author bio
-- Expertise signals (certifications, years exp, named clients)
-- Experience signals (real projects, testimonials, photos)
-- Authoritativeness (press mentions, LinkedIn, Wikipedia)
+#### Agent C — Contenu & E-E-A-T
+- Présence page About + bio auteur
+- Signaux expertise (certifs, années exp, clients nommés)
+- Signaux expérience (projets réels, témoignages, photos)
+- Autorité (mentions presse, LinkedIn, Wikipedia)
 - Trust (mentions légales, SIRET, CGV, contact)
-- Content depth + freshness (blog, copyright year)
-- Detect AI-generated vs human content
+- Profondeur + fraîcheur contenu (blog, année copyright)
+- Détecter contenu généré par IA vs humain
 
 #### Agent D — Brand & schemas
-- Brand presence on : LinkedIn, Crunchbase, Trustpilot, Wikipedia, Wikidata, social media
-- Press mentions (WebSearch)
-- Schemas currently present
-- Schemas critical missing (with ready-to-paste JSON-LD generated)
-- sameAs entity disambiguation signals
+- Présence marque sur : LinkedIn, Crunchbase, Trustpilot, Wikipedia, Wikidata, social media
+- Mentions presse (WebSearch)
+- Schemas actuellement présents
+- Schemas critiques manquants (avec JSON-LD prêt à coller généré)
+- Signaux sameAs disambiguation entité
 
-Each agent writes its JSON output to `/tmp/tikupmedia-<domain>/<agent-name>.json`.
+Chaque agent écrit son output JSON dans `/tmp/tikupmedia-<domaine>/<agent-name>.json`.
 
 ### Phase 2 — Business intelligence (60s)
 
-Run the business analysis agent from `agents/business.md` with :
-- `BUSINESS_TYPE` from Phase 0
-- `KEYWORDS_DATA` from Agent B
+Lancer l'agent d'analyse business depuis `agents/business.md` avec :
+- `BUSINESS_TYPE` de la Phase 0
+- `KEYWORDS_DATA` de l'Agent B
 - `OUTPUT_DIR`
 
-This unique TikupMedia agent calculates :
-- **Monthly revenue loss** per keyword using industry benchmarks
-- **Total revenue loss / month + / year**
-- **Recovery projections** (3m / 6m / 12m)
-- **Potential leads/clients lost per month**
+Cet agent TikupMedia unique calcule :
+- **CA perdu mensuel** par keyword en utilisant benchmarks d'industrie
+- **CA perdu total / mois + / an**
+- **Projections de récupération** (3m / 6m / 12m)
+- **Leads/clients perdus par mois**
 
 Output : `business.json`
 
-### Phase 3 — Synthesis (60s)
+### Phase 3 — Synthèse (60s)
 
-Read all 5 outputs and consolidate into `synthesis.json` with these fields :
+Lire tous les 5 outputs et consolider dans `synthesis.json`.
 
-```json
-{
-  "url": "https://prospect.com",
-  "brand_name_prospect": "Prospect",
-  "domain": "prospect.com",
-  "business_type": "local_service",
-  "audit_date": "2026-05-27",
+### Phase 4 — Génération HTML (30s)
 
-  "score_composite": 26,
-  "score_breakdown": {
-    "ai_citability": 28,
-    "brand_authority": 32,
-    "content_eeat": 12,
-    "technical": 48,
-    "schema": 0,
-    "platform_optimization": 31
-  },
+1. Charger le template : `~/.claude/skills/tikupmedia-audit/templates/audit.html.template`
+2. Remplacer TOUS les `{{PLACEHOLDER}}` avec les valeurs de `synthesis.json`
+3. Générer les lignes du tableau de keywords HTML
+4. Générer les cartes concurrents HTML
+5. Générer les findings HTML
+6. Générer les colonnes du plan d'action HTML
+7. Écrire dans `~/Downloads/audit-<domaine>-<YYYY-MM-DD>.html`
+8. `open ~/Downloads/audit-<domaine>-<YYYY-MM-DD>.html`
 
-  "platforms_readiness": {
-    "google_aio": 28,
-    "chatgpt": 35,
-    "perplexity": 22,
-    "claude": 30,
-    "copilot": 32,
-    "apple_intelligence": 40
-  },
+### Phase 5 — Rapport (10s)
 
-  "keywords": [...],
-  "competitors_top3": [...],
-  "schemas_missing": [...],
-  "schemas_present": [...],
-
-  "revenue_loss": {
-    "monthly": 16740,
-    "yearly": 200880,
-    "potential_leads_per_month": 56,
-    "currency": "EUR"
-  },
-
-  "recovery": {
-    "month_1_score": 52,
-    "month_3_score": 75,
-    "month_12_score": 85,
-    "month_12_revenue_recovered": 200880
-  },
-
-  "key_findings": [
-    { "severity": "critical", "category": "schema", "title": "...", "description": "..." }
-  ],
-
-  "action_plan": {
-    "quick_wins": [...],
-    "medium_term": [...],
-    "strategic": [...]
-  }
-}
-```
-
-### Phase 4 — HTML generation (30s)
-
-1. Load template : `~/.claude/skills/tikupmedia/templates/audit.html.template`
-2. Replace ALL `{{PLACEHOLDER}}` tokens with `synthesis.json` values
-3. Generate keyword table rows HTML
-4. Generate competitor cards HTML
-5. Generate findings HTML
-6. Generate action plan columns HTML
-7. Write to `~/Downloads/audit-<domain>-<YYYY-MM-DD>.html`
-8. `open ~/Downloads/audit-<domain>-<YYYY-MM-DD>.html`
-
-### Phase 5 — Report (10s)
-
-Tell the user :
-- ✅ Audit complet généré : `~/Downloads/audit-<domain>.html`
+Dire à l'utilisateur :
+- ✅ Audit complet généré : `~/Downloads/audit-<domaine>.html`
 - Score : X/100
 - Manque à gagner : Y € / mois
 - 3 top findings critiques
 - Suggestion : ouvrir le HTML, ajuster les chiffres si besoin, envoyer au prospect
 
-## Adaptation par business type
+## Adaptation par type de business
 
-| Business type | Focus dans l'audit |
+| Type de business | Focus dans l'audit |
 |---|---|
 | `local_service` | Local Pack + Google Business Profile + Apple Maps |
-| `saas` | Pages de comparaison + Knowledge Graph + entity |
-| `ecommerce` | Product schemas + reviews + cart abandonment |
-| `agency` | Portfolio + brand authority + case studies |
-| `publisher` | E-E-A-T + author credentials + article schema |
-| `personal_brand` | Person schema + sameAs + social proof |
+| `saas` | Pages de comparaison + Knowledge Graph + entité |
+| `ecommerce` | Product schemas + reviews + abandon de panier |
+| `agency` | Portfolio + brand authority + études de cas |
+| `publisher` | E-E-A-T + credentials auteur + Article schema |
+| `personal_brand` | Person schema + sameAs + preuve sociale |
 
-## Important rules
+## Règles importantes
 
-1. **NEVER invent data** : if an agent returns 0 results, write "0" not "estimated X"
-2. **Always include disclaimers** : `±20% estimates` block in the HTML
-3. **Adapt CA calculation to industry** : use `agents/business.md` benchmarks
-4. **Don't name competitors you can't verify** : use "Concurrent #1 (anonymisé)" if WebSearch fails
-5. **Respect robots.txt** : never override
-6. **Brand the output** : every HTML uses config.json values, not hardcoded values
-7. **Cite real sources** in the audit footer (Backlinko, Gartner, OpenAI public data)
+1. **JAMAIS d'invention** : si un agent renvoie 0, écrire "0" pas "estimé X"
+2. **Toujours inclure les disclaimers** : bloc `±20% estimates` dans le HTML
+3. **Adapter le calcul CA à l'industrie** : utiliser `agents/business.md` benchmarks
+4. **Ne pas nommer de concurrents non vérifiables** : utiliser "Concurrent #1 (anonymisé)" si WebSearch échoue
+5. **Respecter robots.txt** : jamais override
+6. **Brander l'output** : chaque HTML utilise les valeurs de config.json, pas hardcodées
+7. **Citer les vraies sources** dans le footer (Backlinko, Gartner, OpenAI public data)
 
-## Customization
+## Personnalisation
 
-Edit `~/.claude/skills/tikupmedia/config.json` to customize :
-- Agency identity (name, logo, tagline)
-- Design (5 colors, fonts)
-- What you sell (services, prices, guarantees)
-- Audience (industries, geographies, ICP)
-- Audit tone (punchy / professional / friendly)
+Édite `~/.claude/skills/tikupmedia-audit/config.json` pour personnaliser :
+- Identité agence (nom, logo, tagline)
+- Design (5 couleurs, fonts)
+- Ce que tu vends (services, prix, garanties)
+- Audience (industries, géographies, ICP)
+- Ton de l'audit (punchy / professionnel / chaleureux)
 - CTAs (email, WhatsApp, Calendly)
 
-Or run the setup wizard :
+Ou lance le setup wizard :
 ```
-/tikupmedia setup
+/tikupmedia-audit setup
 ```
 
-## File structure
+## Structure des fichiers
 
 ```
-~/.claude/skills/tikupmedia/
-├── SKILL.md                   ← This file (orchestrator)
+~/.claude/skills/tikupmedia-audit/
+├── SKILL.md                   ← Ce fichier (orchestrateur)
 ├── README.md                  ← Documentation
-├── SHARING.md                 ← Distribution guide
+├── PARTAGE.md                 ← Guide distribution
 ├── LICENSE                    ← MIT
-├── config.json                ← Active config (gitignored)
-├── config.example.json        ← Template with comments
+├── config.json                ← Config active (gitignored)
+├── config.example.json        ← Template commenté
 ├── agents/
-│   └── business.md            ← Industry revenue loss calculation
+│   └── business.md            ← Calcul CA perdu par industrie
 ├── scripts/
-│   └── setup-wizard.md        ← Interactive configurator
+│   └── setup-wizard.md        ← Wizard config interactif
 └── templates/
-    └── audit.html.template    ← HTML output template
+    └── audit.html.template    ← Template HTML brandable
 ```
