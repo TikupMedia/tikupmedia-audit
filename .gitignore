@@ -1,0 +1,39 @@
+# Local active config (contains personal branding — never commit)
+config.json
+
+# Backup configs
+config.backup-*.json
+config.local.json
+
+# OS junk
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+
+# Temp work files (test audits, intermediate JSONs)
+/tmp/
+*.tmp
+
+# Dependencies (if any future scripts add them)
+node_modules/
+__pycache__/
+*.pyc
+
+# Generated audits (users keep theirs locally)
+audit-*.html
+
+# Plugin build artifacts
+*.plugin
+*.zip

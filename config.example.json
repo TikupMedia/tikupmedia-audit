@@ -1,0 +1,178 @@
+{
+  "_comment": "Configuration tikupmedia — tout est personnalisable. Copie ce fichier vers config.json puis adapte à ton agence.",
+
+  "agency": {
+    "brand_name": "TikupMedia",
+    "tagline": "Studio dev français · 12 développeurs · 150+ produits livrés depuis 2020",
+    "site_url": "https://tikupmedia.com",
+    "logo_url": "https://tikupmedia.com/tikup-logo-black.png",
+    "founded_year": 2020,
+    "team_size": "12 développeurs",
+    "country": "France",
+    "languages_spoken": ["FR", "EN"]
+  },
+
+  "design": {
+    "color_primary": "#e8392b",
+    "color_primary_accent": "#ff4a3a",
+    "color_background": "#0a0a0c",
+    "color_surface": "#14141a",
+    "color_text": "#c4c4cc",
+    "color_text_bright": "#fafafa",
+    "color_muted": "#8a8a96",
+    "_palette_examples": {
+      "blood_dark": { "primary": "#e8392b", "background": "#0a0a0c" },
+      "emerald_dark": { "primary": "#10b981", "background": "#0a0f0c" },
+      "blue_dark": { "primary": "#3b82f6", "background": "#0a0b14" },
+      "purple_dark": { "primary": "#8b5cf6", "background": "#0d0a14" },
+      "minimal_light": { "primary": "#0a0a0c", "background": "#fafafa" }
+    },
+    "font_family": "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', sans-serif",
+    "logo_in_header": true,
+    "show_competitor_section": true,
+    "show_ai_disruption_section": true,
+    "show_pricing_in_html": false
+  },
+
+  "what_you_sell": {
+    "primary_offer": "Refonte complète + optimisation SEO/GEO du site web",
+    "services_list": [
+      "Audit SEO/GEO complet et plan d'action",
+      "Refonte technique (Next.js, schemas, Core Web Vitals 95+)",
+      "Création de pages services + pages géo (longue traîne)",
+      "Setup brand authority (Wikidata, Google Business, Trustpilot)",
+      "Stratégie content (1 article / mois minimum)",
+      "Maintenance évolutive 30 jours incluse"
+    ],
+    "price_range": {
+      "min": 1500,
+      "max": 25000,
+      "currency": "€",
+      "billing_model": "fixed_quote",
+      "show_in_audit": false,
+      "_help": "billing_model = 'fixed_quote' | 'monthly_retainer' | 'hourly' | 'per_project'"
+    },
+    "delivery_time_days": 30,
+    "guarantees": [
+      "Devis fixe sous 48h, sans surprise",
+      "Cadrage offert, sans engagement",
+      "Code source remis à la livraison (no vendor lock-in)",
+      "30 jours de maintenance incluse"
+    ]
+  },
+
+  "who_you_target": {
+    "ideal_client_profile": "Startups, PME et grands comptes ayant un produit ou service à digitaliser ou un site existant à refondre",
+    "industries": [
+      "SaaS B2B",
+      "E-commerce",
+      "Services locaux premium",
+      "Agences digitales",
+      "Médias / éditeurs",
+      "Cabinets de conseil"
+    ],
+    "geographies": ["France", "Belgique", "Suisse", "Luxembourg", "Canada"],
+    "team_sizes": ["Solo founder", "Startup 2-10", "PME 11-100", "Grand compte 100+"],
+    "pain_points_addressed": [
+      "Site invisible sur Google et IA",
+      "Site lent, mauvaise UX mobile",
+      "Pas d'avis ou de preuves sociales visibles",
+      "Marque diluée sur le web (Wikidata, GBP absents)",
+      "Concurrents qui captent leur trafic naturel",
+      "Pas de stratégie content qui convertit"
+    ]
+  },
+
+  "audit_tone": {
+    "style": "punchy_honest",
+    "_help": "Choix : 'punchy_honest' (direct, chiffres choc) | 'consultant_professional' (factuel, neutre) | 'friendly_advisor' (chaleureux) | 'urgent_alarm' (FOMO)",
+    "use_loss_framing": true,
+    "use_opportunity_framing": true,
+    "_loss_vs_opportunity": "loss = 'vous perdez X€' / opportunity = 'vous pourriez gagner X€'. Recommandé : les deux activés.",
+    "include_personal_stake": true,
+    "_personal_stake": "Si true : ajoute une section 'Pourquoi maintenant' qui crée l'urgence (Gartner, AI disruption 2027). Si false : skip.",
+    "headline_template": "Vous perdez {{LOSS}} de chiffre d'affaires chaque mois",
+    "_headline_alternatives": [
+      "Votre site rate {{POTENTIAL_CLIENTS}} clients par mois",
+      "Sur 100 recherches, vous récupérez {{PCT}}%",
+      "{{PROSPECT_NAME}}, voici les {{LOSS}} que vous laissez à vos concurrents",
+      "Diagnostic urgent : {{SCORE}}/100 — voici comment passer à 85+"
+    ]
+  },
+
+  "cta": {
+    "email": "contact@tikupmedia.com",
+    "whatsapp": "+33615475216",
+    "calendly": "",
+    "phone": "+33 6 15 47 52 16",
+    "primary_button_text": "Programmer un appel · 30 min",
+    "secondary_button_text": "WhatsApp",
+    "email_subject_template": "Audit GEO {{PROSPECT_URL}} — récupération CA",
+    "email_body_template": "Bonjour,\n\nJ'ai bien reçu l'audit qui montre {{LOSS}} de manque à gagner mensuel.\n\nJe souhaite un rendez-vous pour étudier le plan d'action.\n\nMon téléphone :\nMa disponibilité :\n\nMerci.",
+    "reassure_bullets": [
+      "Devis sous 48h, fixé d'avance",
+      "Cadrage offert, sans engagement",
+      "Studio dev français 100% in-house"
+    ],
+    "urgency_message": "Diagnostic offert · Audit personnalisé sous 48h"
+  },
+
+  "calculation": {
+    "language": "fr",
+    "currency": "EUR",
+    "currency_symbol": "€",
+    "ctr_loss_when_outside_top10": 0.6,
+    "ctr_loss_when_position_4_to_10": 0.2,
+    "default_visit_to_lead_rate": 0.04,
+    "default_lead_to_sale_rate": 0.35,
+    "_help": "Ces taux sont surchargés par agents/business.md selon le type de business. Ne change que si tu cibles une industrie spécifique différente."
+  },
+
+  "ai_disruption_block": {
+    "show": true,
+    "stats": [
+      { "value": "−50 %", "label": "Trafic Google d'ici 2028", "source": "Gartner 2024" },
+      { "value": "900 M", "label": "utilisateurs ChatGPT / semaine", "source": "OpenAI 2025" },
+      { "value": "+527 %", "label": "trafic IA en 5 mois (2025)", "source": "SparkToro" },
+      { "value": "1,5 Md", "label": "Google AI Overviews / mois", "source": "Google déc. 2025" }
+    ]
+  },
+
+  "competitors_section": {
+    "show": true,
+    "max_competitors": 3,
+    "show_estimated_traffic": true,
+    "show_what_they_do_well": true,
+    "anonymize_if_unknown": true
+  },
+
+  "vs_section": {
+    "show": true,
+    "title_bad": "VOTRE SITE ACTUEL",
+    "title_good": "UN SITE QUI CONVERTIT EN 2026"
+  },
+
+  "timeline": {
+    "show": true,
+    "milestones": [
+      { "when": "Maintenant", "score_color": "red" },
+      { "when": "J + 7", "score_color": "amber" },
+      { "when": "Mois 1", "score_color": "green" },
+      { "when": "Mois 3", "score_color": "emerald" }
+    ]
+  },
+
+  "footer": {
+    "credit_line": "TikupMedia · Studio dev français · tikupmedia.com",
+    "disclaimer": "Les chiffres présentés sont des estimations basées sur Google Keyword Planner, Google Suggest, et benchmarks publics. ±20% de variance possible. Cet audit n'engage que son auteur et ne constitue pas un avis juridique. Pour un devis ferme, un échange direct est nécessaire."
+  },
+
+  "output": {
+    "directory": "~/Downloads",
+    "filename_pattern": "audit-{domain}-{date}.html",
+    "open_in_browser_after_generation": true,
+    "also_save_to_workdir": true,
+    "generate_pdf": false,
+    "_pdf_help": "Si true, génère aussi un PDF via Playwright headless (nécessite npm i -g playwright). Default false pour rester léger."
+  }
+}

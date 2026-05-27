@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="{{LANG}}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audit perte de CA · {{PROSPECT_NAME}} · {{BRAND_NAME}}</title>
+<style>
+  :root {
+    --bg:#0a0a0c; --surface:#14141a; --surface-2:#1c1c24;
+    --ash:#2a2a35; --bone:#c4c4cc; --snow:#fafafa; --mist:#8a8a96;
+    --blood:{{BRAND_COLOR}}; --blood-bright:{{BRAND_COLOR_ACCENT}};
+    --emerald:#10b981; --emerald-bright:#34d399;
+    --amber:#f59e0b; --rose:#ef4444; --info:#3b82f6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Inter",sans-serif;background:var(--bg);color:var(--bone);line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 1.5rem}
+  .cover{padding:5rem 0 4rem;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(239,68,68,.15),transparent 60%),linear-gradient(180deg,#0f0f15 0%,var(--bg) 100%);border-bottom:1px solid var(--ash)}
+  .badge{display:inline-flex;align-items:center;gap:.5rem;font-family:ui-monospace,monospace;font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;padding:.5rem .9rem;border-radius:999px}
+  .badge.danger{color:#f87171;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.35)}
+  .badge.alert{color:#fbbf24;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.35)}
+  h1{font-size:clamp(2.5rem,7vw,5rem);line-height:1;letter-spacing:-.045em;color:var(--snow);font-weight:800;margin:1.5rem 0;text-wrap:balance}
+  h1 em{font-style:italic;color:var(--blood);font-weight:600}
+  .cover-meta{color:var(--mist);font-size:15px;max-width:620px}
+  .cover-meta strong{color:var(--snow);font-weight:600}
+  .loss-hero{margin-top:3rem;padding:3rem 2.5rem;background:linear-gradient(135deg,rgba(239,68,68,.12) 0%,rgba(245,158,11,.08) 100%);border:1px solid rgba(239,68,68,.3);border-radius:24px;position:relative;overflow:hidden}
+  .loss-hero::before{content:"";position:absolute;top:-50px;right:-50px;width:200px;height:200px;background:radial-gradient(circle,rgba(239,68,68,.2),transparent 70%);border-radius:50%}
+  .loss-hero .label{font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#f87171;margin-bottom:.8rem}
+  .loss-hero .amount{font-size:clamp(3rem,9vw,6.5rem);font-weight:800;color:var(--snow);line-height:1;letter-spacing:-.05em;margin:.5rem 0}
+  .loss-hero .amount .currency{color:#f87171;font-size:.6em;vertical-align:top}
+  .loss-hero .period{font-size:1.2rem;color:var(--mist);font-weight:500}
+  .loss-hero .period strong{color:var(--snow)}
+  .loss-hero p{margin-top:1.5rem;color:var(--bone);font-size:15px;line-height:1.6;max-width:600px}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-top:3rem}
+  .kpi{padding:1.5rem;background:var(--surface);border:1px solid var(--ash);border-radius:14px}
+  .kpi-val{font-size:2.2rem;font-weight:700;color:var(--snow);line-height:1;letter-spacing:-.02em}
+  .kpi-val.danger{color:#f87171}.kpi-val.warn{color:#fbbf24}.kpi-val.ok{color:var(--emerald-bright)}
+  .kpi-label{font-family:ui-monospace,monospace;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--mist);margin-top:.6rem}
+  .kpi-sub{margin-top:.4rem;color:var(--bone);font-size:13px;line-height:1.45}
+  section{padding:4.5rem 0;border-bottom:1px solid var(--ash)}
+  section:last-of-type{border-bottom:none}
+  .head{margin-bottom:2.5rem;max-width:760px}
+  .tag{font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--blood);margin-bottom:1rem}
+  h2{font-size:clamp(1.875rem,3.5vw,2.8rem);color:var(--snow);line-height:1.08;letter-spacing:-.035em;font-weight:700;text-wrap:balance;margin-bottom:1rem}
+  h2 em{font-style:italic;color:var(--blood);font-weight:500}
+  .intro{color:var(--mist);font-size:17px;line-height:1.6}
+  h3{color:var(--snow);font-weight:600}
+  .kw-table{overflow:hidden;border:1px solid var(--ash);border-radius:14px;background:var(--surface)}
+  .kw-table table{width:100%;border-collapse:collapse;font-size:14px}
+  .kw-table th{font-family:ui-monospace,monospace;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--blood);font-weight:600;text-align:left;padding:1rem 1.2rem;border-bottom:2px solid var(--blood);background:var(--surface-2)}
+  .kw-table td{padding:1.1rem 1.2rem;border-bottom:1px solid var(--ash);color:var(--bone);vertical-align:middle}
+  .kw-table tr:last-child td{border-bottom:none}
+  .kw-table tr:hover{background:rgba(255,255,255,.02)}
+  .kw{color:var(--snow);font-weight:500}
+  .vol{font-family:ui-monospace,monospace;color:var(--snow);font-weight:600;font-size:14px}
+  .pos{display:inline-block;padding:.2rem .55rem;border-radius:4px;font-size:11px;font-family:ui-monospace,monospace;font-weight:600}
+  .pos.bad{background:rgba(239,68,68,.18);color:#f87171}.pos.ok{background:rgba(16,185,129,.15);color:#34d399}
+  .loss-cell{color:#f87171;font-weight:700;font-family:ui-monospace,monospace;text-align:right}
+  @media(max-width:768px){.kw-table table thead{display:none}.kw-table table tr{display:block;padding:1rem;border-bottom:1px solid var(--ash)}.kw-table table td{display:flex;justify-content:space-between;border:none;padding:.4rem 0;font-size:13px}.kw-table table td:before{content:attr(data-label);font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--blood);font-weight:600}}
+  .kw-total{background:rgba(239,68,68,.06)!important;font-weight:700}
+  .kw-total td{color:var(--snow);font-size:15px!important;border-top:2px solid rgba(239,68,68,.4)}
+  .kw-total .loss-cell{font-size:18px;color:#fbbf24}
+  .comps{display:grid;gap:1rem}
+  .comp{display:grid;grid-template-columns:auto 1fr auto;gap:1.5rem;align-items:center;padding:1.5rem;background:var(--surface);border:1px solid var(--ash);border-radius:14px}
+  .comp-rank{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;font-family:ui-monospace,monospace}
+  .comp-rank.gold{background:rgba(245,158,11,.2);color:#fbbf24;border:2px solid #fbbf24}
+  .comp-rank.silver{background:rgba(192,192,192,.15);color:#d4d4d4;border:2px solid #b0b0b0}
+  .comp-rank.bronze{background:rgba(205,127,50,.15);color:#cd7f32;border:2px solid #cd7f32}
+  .comp-name{color:var(--snow);font-weight:600;font-size:16px}
+  .comp-url{color:var(--mist);font-size:12px;font-family:ui-monospace,monospace;margin-top:.2rem}
+  .comp-traffic{font-family:ui-monospace,monospace;color:var(--emerald-bright);font-weight:600;font-size:14px;text-align:right}
+  .comp-traffic .big{display:block;font-size:24px;color:var(--snow)}
+  .vs-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2rem}
+  @media(max-width:768px){.vs-grid{grid-template-columns:1fr}}
+  .vs-col{padding:2rem;border-radius:16px}
+  .vs-col.bad{background:linear-gradient(180deg,rgba(239,68,68,.08),transparent 80%);border:1px solid rgba(239,68,68,.3)}
+  .vs-col.good{background:linear-gradient(180deg,rgba(16,185,129,.08),transparent 80%);border:1px solid rgba(16,185,129,.3)}
+  .vs-col h4{font-size:13px;font-family:ui-monospace,monospace;letter-spacing:.18em;text-transform:uppercase;margin-bottom:1rem}
+  .vs-col.bad h4{color:#f87171}.vs-col.good h4{color:var(--emerald-bright)}
+  .vs-col ul{list-style:none;padding:0}
+  .vs-col li{padding:.75rem 0;color:var(--bone);font-size:14px;line-height:1.5;border-bottom:1px solid var(--ash);display:flex;gap:.7rem;align-items:flex-start}
+  .vs-col li:last-child{border-bottom:none}
+  .vs-col li::before{flex-shrink:0;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;margin-top:1px}
+  .vs-col.bad li::before{content:"✕";background:rgba(239,68,68,.2);color:#f87171}
+  .vs-col.good li::before{content:"✓";background:rgba(16,185,129,.2);color:var(--emerald-bright)}
+  .trend-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+  .trend-card{padding:1.75rem;background:var(--surface);border:1px solid var(--ash);border-radius:14px}
+  .trend-card .stat{font-size:2.5rem;font-weight:800;color:var(--blood);line-height:1;letter-spacing:-.03em;margin-bottom:.5rem}
+  .trend-card .label{color:var(--snow);font-weight:600;font-size:14px;margin-bottom:.5rem}
+  .trend-card .src{color:var(--mist);font-size:12px;font-family:ui-monospace,monospace}
+  .roi-hero{padding:3rem;background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(16,185,129,.02));border:1px solid rgba(16,185,129,.3);border-radius:24px}
+  .roi-row{display:grid;grid-template-columns:1fr auto;align-items:center;padding:1.2rem 0;border-bottom:1px solid var(--ash);gap:1.5rem}
+  .roi-row:last-of-type{border-bottom:2px solid var(--emerald);padding-bottom:1.5rem;margin-bottom:.5rem}
+  .roi-row.final{padding-top:1.5rem;border:none}
+  .roi-row .desc{color:var(--bone);font-size:15px}
+  .roi-row .amount{font-family:ui-monospace,monospace;font-weight:700;color:var(--snow);font-size:18px;white-space:nowrap}
+  .roi-row.final .amount{color:var(--emerald-bright);font-size:32px}
+  .roi-row.final .desc{color:var(--snow);font-weight:700;font-size:18px}
+  .timeline{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0;border:1px solid var(--ash);border-radius:14px;overflow:hidden;background:var(--surface)}
+  .tl-step{padding:1.5rem;border-right:1px solid var(--ash);position:relative}
+  .tl-step:last-child{border-right:none}
+  .tl-step .when{font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--blood);margin-bottom:.5rem}
+  .tl-step .score{font-size:2.5rem;font-weight:800;color:var(--snow);line-height:1;letter-spacing:-.03em}
+  .tl-step .what{color:var(--mist);font-size:13px;margin-top:.5rem;line-height:1.4}
+  .cta{padding:4rem 2rem;text-align:center;background:linear-gradient(135deg,rgba(232,57,43,.15),rgba(232,57,43,.03));border:1px solid rgba(232,57,43,.35);border-radius:24px;margin:4rem 0 2rem}
+  .cta h2{margin-bottom:1.2rem}
+  .cta p{color:var(--bone);max-width:600px;margin:0 auto 2.5rem;font-size:17px;line-height:1.6}
+  .btn{display:inline-flex;align-items:center;gap:.7rem;padding:1.2rem 2rem;background:var(--blood);color:var(--snow);border-radius:999px;text-decoration:none;font-weight:600;font-size:16px;transition:.2s;box-shadow:0 10px 30px -10px rgba(232,57,43,.5)}
+  .btn:hover{background:var(--blood-bright);transform:translateY(-2px)}
+  .btn-secondary{margin-left:.8rem;background:transparent;border:1px solid var(--ash);color:var(--bone)}
+  .reassure{margin-top:1.5rem;color:var(--mist);font-size:13px;display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap}
+  .reassure span::before{content:"✓ ";color:var(--emerald-bright)}
+  footer{padding:2.5rem 0;border-top:1px solid var(--ash);color:var(--mist);font-size:13px}
+  footer .row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+  footer a{color:var(--snow);text-decoration:none;border-bottom:1px solid var(--blood)}
+  .sources{margin-top:2rem;padding:1.25rem 1.5rem;background:var(--surface);border-radius:10px;border:1px solid var(--ash)}
+  .sources p{font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--blood);margin-bottom:.5rem}
+  .sources ul{list-style:none;padding:0;font-size:12px;color:var(--mist);line-height:1.7}
+</style>
+</head>
+<body>
+
+<header class="cover">
+  <div class="wrap">
+    <span class="badge danger">● Diagnostic urgent · {{AUDIT_DATE}}</span>
+    <h1>Vous perdez <em>{{LOSS_AMOUNT}}</em> de chiffre d'affaires <em>chaque mois</em></h1>
+    <p class="cover-meta">
+      Audit de visibilité Google + IA pour <strong>{{PROSPECT_URL}}</strong>.<br>
+      Réalisé sur la base de <strong>{{KEYWORDS_COUNT}} mots-clés stratégiques</strong>, des données du marché {{MARKET}} et de la position actuelle de vos concurrents directs.
+    </p>
+
+    <div class="loss-hero">
+      <p class="label">⚠ MANQUE À GAGNER ESTIMÉ</p>
+      <div class="amount"><span class="currency">−</span>{{LOSS_AMOUNT_NUM}}<span class="currency"> {{CURRENCY}}</span></div>
+      <p class="period">/ mois · soit <strong>{{LOSS_AMOUNT_YEAR}} / an</strong></p>
+      <p>{{LOSS_NARRATIVE}}</p>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><div class="kpi-val danger">{{SCORE}}<span style="color:var(--mist);font-size:.5em">/100</span></div><div class="kpi-label">Score global</div><p class="kpi-sub">{{SCORE_VERDICT}}</p></div>
+      <div class="kpi"><div class="kpi-val warn">{{TOTAL_VOLUME}}</div><div class="kpi-label">Recherches / mois</div><p class="kpi-sub">Volume total sur vos mots-clés cibles.</p></div>
+      <div class="kpi"><div class="kpi-val danger">−{{CAPTURE_PCT}}%</div><div class="kpi-label">Trafic capturé</div><p class="kpi-sub">Vous récupérez moins de {{CAPTURE_PCT_INVERSE}}% du potentiel.</p></div>
+      <div class="kpi"><div class="kpi-val ok">+ {{POTENTIAL_LEADS}}</div><div class="kpi-label">{{LEAD_LABEL}} / mois</div><p class="kpi-sub">Récupérables avec une remise à niveau.</p></div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="head">
+      <p class="tag">01 · Calcul du manque à gagner</p>
+      <h2>D'où viennent les <em>{{LOSS_AMOUNT}} perdus</em> chaque mois</h2>
+      <p class="intro">Voici les {{KEYWORDS_COUNT}} requêtes principales. Pour chacune : volume mensuel Google, votre position actuelle, et le CA estimé qui part chez vos concurrents.</p>
+    </div>
+    <div class="kw-table">
+      <table>
+        <thead><tr><th>Mot-clé recherché</th><th style="text-align:right">Volume / mois</th><th>Votre position</th><th>Visites perdues</th><th style="text-align:right">CA perdu / mois</th></tr></thead>
+        <tbody>{{KEYWORDS_ROWS}}</tbody>
+      </table>
+    </div>
+    <div class="sources">
+      <p>📊 Sources et hypothèses du calcul</p>
+      <ul>
+        <li>• Volumes : Google Keyword Planner + Google Suggest (12 derniers mois)</li>
+        <li>• CTR top 3 Google : 60% (Backlinko 2024) — fraction perdue si vous n'y êtes pas</li>
+        <li>• Taux conversion visite → action : {{CONV_RATE}}% ({{INDUSTRY_BENCHMARK}})</li>
+        <li>• Panier moyen / ticket : {{TICKET_INFO}}</li>
+        <li>• Estimations ±20%. Pour un calcul exact, un échange direct est nécessaire.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head">
+      <p class="tag">02 · Qui prend votre place</p>
+      <h2>Vos <em>3 principaux concurrents</em></h2>
+      <p class="intro">Ces 3 entreprises captent l'essentiel du trafic qui devrait être à vous. Voici leur trafic mensuel estimé.</p>
+    </div>
+    <div class="comps">{{COMPETITORS_LIST}}</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head">
+      <p class="tag">03 · Pourquoi vous perdez</p>
+      <h2>Votre site vs un site moderne <em>en 2026</em></h2>
+    </div>
+    <div class="vs-grid">
+      <div class="vs-col bad"><h4>● VOTRE SITE AUJOURD'HUI</h4><ul>{{VS_BAD_LIST}}</ul></div>
+      <div class="vs-col good"><h4>● UN SITE QUI CONVERTIT EN 2026</h4><ul>{{VS_GOOD_LIST}}</ul></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head">
+      <p class="tag">04 · Le séisme à venir</p>
+      <h2>Pourquoi ça va <em>empirer</em> en 2027</h2>
+      <p class="intro">Le marché de la recherche bascule vers l'IA. Si vous n'agissez pas maintenant, ce manque à gagner va doubler dans les 18 mois.</p>
+    </div>
+    <div class="trend-cards">
+      <div class="trend-card"><div class="stat">−50%</div><div class="label">Trafic Google classique d'ici 2028</div><div class="src">Source : Gartner, 2024</div></div>
+      <div class="trend-card"><div class="stat">1,5 Md</div><div class="label">d'utilisateurs Google AI Overviews / mois</div><div class="src">Source : Google, déc. 2025</div></div>
+      <div class="trend-card"><div class="stat">+527%</div><div class="label">de trafic depuis l'IA en 5 mois</div><div class="src">Source : SparkToro, mai 2025</div></div>
+      <div class="trend-card"><div class="stat">×4,4</div><div class="label">taux de conversion via IA vs Google</div><div class="src">Source : Industrie SEO 2025</div></div>
+      <div class="trend-card"><div class="stat">900 M</div><div class="label">d'utilisateurs ChatGPT / semaine</div><div class="src">Source : OpenAI, 2025</div></div>
+      <div class="trend-card"><div class="stat">{{AI_OPP_PCT}}%</div><div class="label">de {{INDUSTRY_NAME}} optimisés pour l'IA</div><div class="src">→ <strong style="color:var(--emerald-bright)">{{AI_OPP_GAP}}% de retard</strong> à combler</div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head">
+      <p class="tag">05 · Récupération</p>
+      <h2>Trajectoire projetée <em>sur 12 mois</em></h2>
+      <p class="intro">Voici la trajectoire avec une mise à niveau professionnelle.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-step"><div class="when">● Maintenant</div><div class="score" style="color:#f87171">{{SCORE}}</div><div class="what">Manque à gagner {{LOSS_AMOUNT}} / mois</div></div>
+      <div class="tl-step"><div class="when">● J + 7</div><div class="score" style="color:#fbbf24">{{SCORE_W1}}</div><div class="what">Quick wins techniques (schemas + sitemap + FAQ)</div></div>
+      <div class="tl-step"><div class="when">● Mois 1</div><div class="score" style="color:#34d399">{{SCORE_M1}}</div><div class="what">Pages dédiées + brand authority + avis</div></div>
+      <div class="tl-step"><div class="when">● Mois 3</div><div class="score" style="color:var(--emerald-bright)">{{SCORE_M3}}</div><div class="what">Refonte + content + Apple/Bing Maps</div></div>
+    </div>
+
+    <h3 style="margin:3rem 0 1.5rem;font-size:1.4rem">Projection financière sur 12 mois</h3>
+    <div class="roi-hero">
+      <div class="roi-row"><div class="desc">Récupération sur les mots-clés audités</div><div class="amount">+ {{RECOVERY_KEYWORDS}} / mois</div></div>
+      <div class="roi-row"><div class="desc">Nouveau trafic via Google AI Overviews + ChatGPT</div><div class="amount">+ {{RECOVERY_AI}} / mois</div></div>
+      <div class="roi-row"><div class="desc">Effet local et brand</div><div class="amount">+ {{RECOVERY_LOCAL}} / mois</div></div>
+      <div class="roi-row final"><div class="desc">CA additionnel estimé / mois</div><div class="amount">+ {{RECOVERY_TOTAL}}</div></div>
+    </div>
+    <p style="margin-top:1.5rem;color:var(--mist);font-size:14px;text-align:center">
+      Soit <strong style="color:var(--snow)">+ {{RECOVERY_YEAR}} sur 12 mois</strong>, par rapport à votre situation actuelle.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="cta">
+      <span class="badge alert" style="margin-bottom:1.5rem">● Diagnostic offert · Audit personnalisé sous 48h</span>
+      <h2>Récupérez ces <em>{{LOSS_AMOUNT}} / mois</em></h2>
+      <p>On a déjà préparé pour vous le plan d'action détaillé. Aucun engagement, devis transparent, code source remis à la livraison.</p>
+      <a href="mailto:{{CTA_EMAIL}}?subject=Audit GEO {{PROSPECT_URL}} - récupération CA" class="btn">
+        Programmer un appel · 30 min
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+      </a>
+      {{WHATSAPP_BUTTON}}
+      <div class="reassure">
+        <span>Devis sous 48h, fixé d'avance</span>
+        <span>Cadrage offert, sans engagement</span>
+        <span>{{REASSURE_3}}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <div><strong style="color:var(--snow)">{{BRAND_NAME}}</strong> · <a href="{{BRAND_SITE}}">{{BRAND_SITE_DISPLAY}}</a></div>
+      <div>Audit généré le {{AUDIT_DATE}} · Méthodologie GEO-SEO 2026 · Données publiques</div>
+    </div>
+    <p style="margin-top:1.5rem;color:var(--mist);font-size:11px;line-height:1.6">
+      Les chiffres présentés (volumes de recherche, CA estimé, scores concurrents) sont des estimations basées sur Google Keyword Planner, Google Suggest, le panier moyen sectoriel et les benchmarks de conversion publics. Les chiffres réels peuvent varier de ±20%. Cet audit n'engage que son auteur et ne constitue pas un avis juridique ou financier. Pour un devis ferme, un échange direct est nécessaire.
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
